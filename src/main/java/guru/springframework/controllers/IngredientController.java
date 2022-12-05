@@ -52,7 +52,7 @@ public class IngredientController {
     public String newRecipe(@PathVariable String recipeId, Model model){
 
         //make sure we have a good id value
-        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).block();
+        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).toProcessor().block();
         //todo raise exception if null
 
         //need to return back parent id for hidden form property
@@ -78,7 +78,7 @@ public class IngredientController {
 
     @PostMapping("recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@ModelAttribute IngredientCommand command){
-        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
+        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).toProcessor().block();
 
         log.debug("saved ingredient id:" + savedCommand.getId());
 
@@ -90,7 +90,7 @@ public class IngredientController {
                                    @PathVariable String id){
 
         log.debug("deleting ingredient id:" + id);
-        ingredientService.deleteById(recipeId, id).block();
+        ingredientService.deleteById(recipeId, id).toProcessor().block();
 
         return "redirect:/recipe/" + recipeId + "/ingredients";
     }
